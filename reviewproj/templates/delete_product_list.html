@@ -1,0 +1,13 @@
+<h2>Select a Product to Delete</h2>
+<ul>
+    {% for product in products %}
+        <li>
+            {{ product.name }}
+            <form method="post" action="{% url 'delete_product' product.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" onclick="return confirm('Delete this product?')">Delete</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'admin_dashboard' %}">Back</a>

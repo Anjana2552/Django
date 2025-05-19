@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f9fafb;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            margin: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-add {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .btn-edit {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .btn-delete {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+    <a href="{% url 'add_product' %}" class="btn btn-add">Add Product</a>
+    <a href="{% url 'edit_product_list' %}" class="btn btn-edit">Edit Product</a>
+    <a href="{% url 'delete_product_list' %}" class="btn btn-delete">Delete Product</a>
+</body>
+</html>
