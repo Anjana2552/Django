@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import authenticate, login, logout
-from .forms import LoginForm,ProductForm
+from .forms import LoginForm,ProductForm, ReviewForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import get_user_model
 from .models import Product
+from django.db.models import Avg
 
 from .forms import SignupForm
 
@@ -33,7 +34,9 @@ def login_view(request):
 @login_required
 @user_passes_test(lambda u: u.is_user)
 def user_dashboard(request):
-    return render(request, 'user_dashboard.html')
+    products = Product.objects.annotate(avg_rating=Avg('reviews__rating'))
+    return render(request, 'user_dashboard.html', {'products': products})
+
 
 @login_required
 @user_passes_test(lambda u: u.is_admin)
@@ -59,8 +62,9 @@ def admin_dashboard(request):
             return redirect('admin_dashboard')
     else:
         form = ProductForm()
+    products = Product.objects.all().prefetch_related('reviews')
+    return render(request, 'admin_dashboard.html', {'form': form, 'products': products})
 
-    return render(request, 'admin_dashboard.html', {'form': form})
 
 def is_user(user):
     return user.is_authenticated and user.role == 'user'
@@ -68,7 +72,7 @@ def is_user(user):
 @login_required
 @user_passes_test(is_user)
 def user_dashboard(request):
-    products = Product.objects.all()
+    products = Product.objects.annotate(avg_rating=Avg('reviews__rating'))
     return render(request, 'user_dashboard.html', {'products': products})
 
 @login_required
@@ -99,9 +103,12 @@ def edit_product(request, product_id):
     form = ProductForm(request.POST or None, request.FILES or None, instance=product)
     if form.is_valid():
         form.save()
-        return redirect('admin_dashboard')  
-    return render(request, 'edit_product.html', {'form': form, 'product': product})
-
+        return redirect('admin_dashboard')
+    return render(request, 'add_product.html', {
+        'form': form,
+        'product': product,
+        'is_edit': True
+    })
 
 @login_required
 @user_passes_test(is_admin)
@@ -109,10 +116,24 @@ def edit_product_list(request):
     products = Product.objects.all()
     return render(request, 'edit_product_list.html', {'products': products})
 
-
 @login_required
 @user_passes_test(is_admin)
 def delete_product_list(request):
     products = Product.objects.all()
     return render(request, 'delete_product_list.html', {'products': products})
 
+@login_required
+def add_review(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            return redirect('user_dashboard') 
+    else:
+        form = ReviewForm()
+
+    return render(request, 'add_review.html', {'form': form, 'product': product})
