@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to ReviewApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: float 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #fff, #f0f4ff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: slideInFromTop 1s ease-out;
+            letter-spacing: -2px;
+        }
+
+        @keyframes slideInFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+            animation: slideInFromTop 1s ease-out 0.2s both;
+        }
+
+        p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            line-height: 1.8;
+            opacity: 0.8;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeIn 1s ease-out 0.4s both;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .feature h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .feature p {
+            font-size: 1rem;
+            margin-bottom: 0;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            gap: 2rem;
+            animation: fadeIn 1s ease-out 0.8s both;
+        }
+
+        .stat {
+            text-align: center;
+            animation: bounce 2s infinite;
+        }
+
+        .stat:nth-child(1) { animation-delay: 0s; }
+        .stat:nth-child(2) { animation-delay: 0.5s; }
+        .stat:nth-child(3) { animation-delay: 1s; }
+
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0, 0, 0);
+            }
+            40%, 43% {
+                transform: translate3d(0, -10px, 0);
+            }
+            70% {
+                transform: translate3d(0, -5px, 0);
+            }
+            90% {
+                transform: translate3d(0, -2px, 0);
+            }
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            display: block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        .description {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+
+        .description h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: slideInFromBottom 1s ease-out 0.6s both;
+        }
+
+        @keyframes slideInFromBottom {
+            0% {
+                opacity: 0;
+                transform: translateY(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+            color: white;
+            padding: 1.2rem 3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2rem;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 180px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 95%;
+                padding: 2.5rem;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 3rem;
+            }
+            .subtitle {
+                font-size: 1.4rem;
+            }
+            p {
+                font-size: 1.2rem;
+            }
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            .btn {
+                min-width: 200px;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .stats {
+                flex-direction: column;
+                align-items: center;
+            }
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">RA</div>
+        <h1>ReviewApp</h1>
+        <div class="subtitle">Your Voice Matters</div>
+        <p>Welcome to ReviewApp! The ultimate platform for authentic product reviews and smart shopping decisions.</p>
+        
+        <div class="description">
+            <h3>🌟 Why Choose ReviewApp?</h3>
+            <p>Join thousands of satisfied users who trust ReviewApp for honest, detailed product reviews. Our community-driven platform ensures you get real insights from real people, helping you make confident purchasing decisions every time.</p>
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <span class="feature-icon">⭐</span>
+                <h3>Rate & Review</h3>
+                <p>Share your honest opinions about products you've used. Help others make informed decisions with your detailed reviews and star ratings.</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">🛍️</span>
+                <h3>Discover Products</h3>
+                <p>Browse through thousands of products across multiple categories. Find the perfect items based on authentic user reviews and ratings.</p>
+            </div>
+            <div class="feature">
+                <span class="feature-icon">👥</span>
+                <h3>Join Community</h3>
+                <p>Connect with like-minded shoppers and trusted reviewers. Build your reputation as a helpful reviewer in our growing community.</p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">15K+</span>
+                <span class="stat-label">Active Users</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">75K+</span>
+                <span class="stat-label">Product Reviews</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">98%</span>
+                <span class="stat-label">User Satisfaction</span>
+            </div>
+        </div>
+        
+        <div class="btn-group">
+            <a href="{% url 'login' %}" class="btn btn-primary">Get Started</a>
+            <a href="{% url 'signup' %}" class="btn btn-secondary">Join Community</a>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced animations and interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add ripple effect to buttons
+            document.querySelectorAll('.btn').forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        border-radius: 50%;
+                        background: rgba(255, 255, 255, 0.6);
+                        width: ${size}px;
+                        height: ${size}px;
+                        left: ${x}px;
+                        top: ${y}px;
+                        transform: scale(0);
+                        animation: ripple 0.6s linear;
+                        pointer-events: none;
+                    `;
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(function() {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Add hover glow effect to container
+            const container = document.querySelector('.container');
+            container.addEventListener('mouseenter', function() {
+                this.style.boxShadow = '0 25px 80px rgba(0, 0, 0, 0.4)';
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            container.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '0 20px 60px rgba(0, 0, 0, 0.3)';
+                this.style.transform = 'translateY(0)';
+            });
+
+
+        });
+
+        // Add ripple animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

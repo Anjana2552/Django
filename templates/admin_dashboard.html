@@ -1,0 +1,340 @@
+<!DOCTYPE htm        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }tml>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ReviewApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: transparent;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .admin-badge {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .admin-actions {
+            background: transparent;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .products-section {
+            background: transparent;
+            padding: 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid #e2e8f0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: white;
+        }
+
+        .card-description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .card-price {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #667eea;
+            margin-bottom: 1.25rem;
+        }
+
+        .reviews {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .reviews h4 {
+            margin-bottom: 0.75rem;
+            font-size: 1.1rem;
+            color: #2d3748;
+        }
+
+        .reviews ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reviews li {
+            margin-bottom: 0.75rem;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            border-left: 3px solid #e2e8f0;
+        }
+
+        .review-author {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .review-rating {
+            color: #f6ad55;
+            margin-left: 0.5rem;
+        }
+
+        .review-comment {
+            font-style: italic;
+            color: #718096;
+            margin-top: 0.25rem;
+        }
+
+        .no-reviews {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                🛡️ Admin Dashboard
+                <span class="admin-badge">ADMIN</span>
+            </h1>
+            <div class="nav-links">
+                <a href="{% url 'logout' %}" class="btn btn-logout">Logout</a>
+            </div>
+        </div>
+
+        <div class="admin-actions">
+            <div class="action-buttons">
+                <a href="{% url 'add_product' %}" class="action-btn btn-add">
+                    ➕ Add Product
+                </a>
+                <a href="{% url 'edit_product_list' %}" class="action-btn btn-edit">
+                    ✏️ Edit Products
+                </a>
+                <a href="{% url 'delete_product_list' %}" class="action-btn btn-delete">
+                    🗑️ Delete Products
+                </a>
+            </div>
+        </div>
+
+        <div class="products-section">
+            <h2 class="section-title">Product Management</h2>
+            
+            {% if products %}
+                <div class="product-grid">
+                    {% for product in products %}
+                    <div class="card">
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        <div class="card-body">
+                            <div class="card-title">{{ product.name }}</div>
+                            <div class="card-description">{{ product.description|truncatewords:20 }}</div>
+                            <div class="card-price">₹{{ product.price }}</div>
+                            <div class="reviews">
+                                <h4>📝 User Reviews</h4>
+                                {% if product.reviews.all %}
+                                    <ul>
+                                        {% for review in product.reviews.all %}
+                                        <li>
+                                            <div class="review-author">
+                                                {{ review.user.username }}
+                                                <span class="review-rating">★ {{ review.rating }}</span>
+                                            </div>
+                                            <div class="review-comment">{{ review.comment }}</div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="no-reviews">No reviews yet</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="text-align: center; color: #718096; font-size: 1.2rem; padding: 3rem;">
+                    <p>No products available</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

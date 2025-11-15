@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Products - ReviewApp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .nav-back {
+            margin-bottom: 2rem;
+        }
+
+        .nav-back a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-back a:hover {
+            opacity: 1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .page-title {
+            color: #e53e3e;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .page-subtitle {
+            color: #718096;
+            font-size: 1.2rem;
+        }
+
+        .warning-banner {
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+            color: #c53030;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 600;
+            border: 2px solid #f56565;
+        }
+
+        .products-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border-color: #f56565;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #2d3748;
+        }
+
+        .card-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: #718096;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .delete-form {
+            margin-top: 1rem;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 101, 101, 0.4);
+        }
+
+        .no-products {
+            text-align: center;
+            color: #718096;
+            font-size: 1.2rem;
+            padding: 3rem;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #f7fafc;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            background: #edf2f7;
+            transform: translateY(-2px);
+        }
+
+        /* Modal styles for confirmation */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-title {
+            color: #e53e3e;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-back">
+        <a href="{% url 'admin_dashboard' %}">
+            ← Back to Admin Dashboard
+        </a>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="page-title">🗑️ Delete Products</h1>
+            <p class="page-subtitle">Select a product to permanently remove</p>
+        </div>
+
+        <div class="warning-banner">
+            ⚠️ Warning: This action cannot be undone. All associated reviews will also be deleted.
+        </div>
+
+        <div class="products-section">
+            {% if products %}
+                <div class="card-container">
+                    {% for product in products %}
+                    <div class="card">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h3>{{ product.name }}</h3>
+                            <div class="card-price">₹{{ product.price }}</div>
+                            <div class="card-description">{{ product.description|truncatewords:15 }}</div>
+                            <form method="post" action="{% url 'delete_product' product.id %}" class="delete-form">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete {{ product.name }}? This action cannot be undone and will also delete all associated reviews.')">
+                                    🗑️ Delete Product
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-products">
+                    <p>No products found to delete.</p>
+                </div>
+            {% endif %}
+            
+            <div class="back-link">
+                <a href="{% url 'admin_dashboard' %}">
+                    ← Return to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

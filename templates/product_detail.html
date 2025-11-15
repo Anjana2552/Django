@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - Product Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, white 0%, #f8f9fa 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: black;
+        }
+
+        .nav-back {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: slideInFromBottom 0.8s ease forwards;
+            animation-delay: 0.1s;
+        }
+
+        .nav-back a {
+            color: black;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .logout-btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: #dc2626;
+            color: white;
+            font-weight: 600;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-back a:hover {
+            color: #2d3748;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .logout-btn:hover {
+            background-color: #b91c1c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .product-header {
+            background: transparent;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .product-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .product-image {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateX(-100px);
+            animation: slideInFromLeft 1s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            z-index: 1;
+            transition: left 0.5s ease;
+        }
+
+        .product-image:hover::before {
+            left: 100%;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-image:hover img {
+            transform: scale(1.08) rotate(1deg);
+        }
+
+        .product-image:hover {
+            animation: glow 2s infinite alternate;
+        }
+
+        .product-info {
+            padding: 1rem 0;
+        }
+
+        .product-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: black;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            opacity: 0;
+            transform: translateX(50px);
+            animation: slideInFromRight 1s ease forwards;
+            animation-delay: 0.5s;
+        }
+
+        .product-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateX(50px);
+            animation: slideInFromRight 1s ease forwards;
+            animation-delay: 0.7s;
+        }
+
+        .product-price:hover {
+            animation: bounce 1s ease;
+            color: #5a67d8;
+        }
+
+        .rating-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInFromBottom 1s ease forwards;
+            animation-delay: 0.9s;
+        }
+
+        .rating-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .rating-display:hover {
+            transform: scale(1.05);
+            animation: float 2s ease-in-out infinite;
+        }
+
+        .rating-count {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+        }
+
+        .product-description {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: black;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInFromBottom 1s ease forwards;
+            animation-delay: 1.1s;
+            transition: all 0.3s ease;
+        }
+
+        .product-description:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInFromBottom 1s ease forwards;
+            animation-delay: 1.3s;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(1.02);
+            transition: all 0.1s ease;
+        }
+
+        .rating-breakdown {
+            background: transparent;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: black;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rating-bars {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .rating-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .rating-label {
+            font-weight: 600;
+            color: black;
+            min-width: 60px;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .bar-fill[data-width] {
+            animation: fillBar 1s ease-out forwards;
+        }
+
+        @keyframes fillBar {
+            from { width: 0%; }
+            to { width: var(--target-width); }
+        }
+
+        .rating-percentage {
+            font-weight: 600;
+            color: black;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .reviews-section {
+            background: transparent;
+            padding: 2rem;
+        }
+
+        .reviews-section .section-title {
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInDown 0.5s ease forwards;
+        }
+
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reviews-grid {
+            display: grid;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .review-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: slideInFromLeft 0.6s ease forwards;
+        }
+
+        @keyframes slideInFromLeft {
+            0% {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Staggered animation delays for multiple reviews */
+        .review-card:nth-child(1) { animation-delay: 0.1s; }
+        .review-card:nth-child(2) { animation-delay: 0.2s; }
+        .review-card:nth-child(3) { animation-delay: 0.3s; }
+        .review-card:nth-child(4) { animation-delay: 0.4s; }
+        .review-card:nth-child(5) { animation-delay: 0.5s; }
+        .review-card:nth-child(6) { animation-delay: 0.6s; }
+        .review-card:nth-child(7) { animation-delay: 0.7s; }
+        .review-card:nth-child(8) { animation-delay: 0.8s; }
+        .review-card:nth-child(9) { animation-delay: 0.9s; }
+        .review-card:nth-child(10) { animation-delay: 1.0s; }
+
+        .review-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInFromLeft 0.4s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .reviewer-name {
+            font-weight: 600;
+            color: black;
+            font-size: 1.1rem;
+        }
+
+        .review-rating {
+            background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .review-comment {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: black;
+            margin-bottom: 1.5rem;
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeInUp 0.5s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideInUp 0.5s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes slideInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .like-btn {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .dislike-btn {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translateY(-2px) scale(1);
+            }
+            50% {
+                transform: translateY(-2px) scale(1.05);
+            }
+            100% {
+                transform: translateY(-2px) scale(1);
+            }
+        }
+
+        .no-reviews {
+            text-align: center;
+            color: black;
+            font-size: 1.2rem;
+            padding: 3rem;
+            opacity: 0;
+            transform: scale(0.9);
+            animation: fadeInScale 0.6s ease forwards;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* New enhanced animations */
+        @keyframes slideInFromRight {
+            0% {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromBottom {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translate3d(0, 0, 0);
+            }
+            40%, 43% {
+                transform: translate3d(0, -10px, 0);
+            }
+            70% {
+                transform: translate3d(0, -5px, 0);
+            }
+            90% {
+                transform: translate3d(0, -2px, 0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.6);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .product-main {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .product-title {
+                font-size: 2.5rem;
+            }
+
+            .product-price {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-title {
+                font-size: 2rem;
+            }
+
+            .product-price {
+                font-size: 1.8rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .rating-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideInFromBottom 0.8s ease forwards;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.2s; }
+        .stat-card:nth-child(2) { animation-delay: 0.4s; }
+        .stat-card:nth-child(3) { animation-delay: 0.6s; }
+        .stat-card:nth-child(4) { animation-delay: 0.8s; }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover .stat-number {
+            animation: bounce 1s ease;
+            color: #5a67d8;
+        }
+
+        .stat-label {
+            color: black;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-back">
+        <a href="{% url 'user_dashboard' %}">
+            ←
+        </a>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </div>
+    
+    <div class="container">
+        <div class="product-header">
+            <div class="product-main">
+                <div class="product-image">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                </div>
+                
+                <div class="product-info">
+                    <h1 class="product-title">{{ product.name }}</h1>
+                    
+                    <div class="product-price">
+                        💰 ₹{{ product.price }}
+                    </div>
+                    
+                    <div class="rating-section">
+                        {% if avg_rating %}
+                            <div class="rating-display">
+                                ⭐ {{ avg_rating|floatformat:1 }} / 5
+                            </div>
+                            <div class="rating-count">
+                                ({{ total_reviews }} review{{ total_reviews|pluralize }})
+                            </div>
+                        {% else %}
+                            <div class="rating-display">
+                                ⭐ No ratings yet
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-description">
+                        {{ product.description }}
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <a href="{% url 'add_review' product.id %}" class="btn btn-primary">
+                            ✍️ Write Review
+                        </a>
+                        <a href="{% url 'view_reviews' product.id %}" class="btn btn-secondary">
+                            💬 View All Reviews
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if total_reviews > 0 %}
+        <div class="rating-breakdown">
+            <h2 class="section-title">📊 Rating Breakdown</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">{{ avg_rating|floatformat:1 }}</div>
+                    <div class="stat-label">Average Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ total_reviews }}</div>
+                    <div class="stat-label">Total Reviews</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ rating_5_count }}</div>
+                    <div class="stat-label">5-Star Reviews</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">{{ rating_1_count }}</div>
+                    <div class="stat-label">1-Star Reviews</div>
+                </div>
+            </div>
+            
+            <div class="rating-bars">
+                <div class="rating-bar">
+                    <div class="rating-label">5 ⭐</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" data-width="{{ rating_5_percentage }}"></div>
+                    </div>
+                    <div class="rating-percentage">{{ rating_5_percentage|floatformat:0 }}%</div>
+                </div>
+                <div class="rating-bar">
+                    <div class="rating-label">4 ⭐</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" data-width="{{ rating_4_percentage }}"></div>
+                    </div>
+                    <div class="rating-percentage">{{ rating_4_percentage|floatformat:0 }}%</div>
+                </div>
+                <div class="rating-bar">
+                    <div class="rating-label">3 ⭐</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" data-width="{{ rating_3_percentage }}"></div>
+                    </div>
+                    <div class="rating-percentage">{{ rating_3_percentage|floatformat:0 }}%</div>
+                </div>
+                <div class="rating-bar">
+                    <div class="rating-label">2 ⭐</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" data-width="{{ rating_2_percentage }}"></div>
+                    </div>
+                    <div class="rating-percentage">{{ rating_2_percentage|floatformat:0 }}%</div>
+                </div>
+                <div class="rating-bar">
+                    <div class="rating-label">1 ⭐</div>
+                    <div class="bar-container">
+                        <div class="bar-fill" data-width="{{ rating_1_percentage }}"></div>
+                    </div>
+                    <div class="rating-percentage">{{ rating_1_percentage|floatformat:0 }}%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="reviews-section">
+            <h2 class="section-title">💬 Recent Reviews</h2>
+            
+            {% if reviews %}
+                <div class="reviews-grid">
+                    {% for review in reviews|slice:":5" %}
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <div class="reviewer-name">👤 {{ review.user.username }}</div>
+                            </div>
+                            <div class="review-rating">⭐ {{ review.rating }}/5</div>
+                        </div>
+                        
+                        <div class="review-comment">
+                            {{ review.comment }}
+                        </div>
+                        
+                        <div class="review-actions">
+                            <form method="post" action="{% url 'like_review' review.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn like-btn">
+                                    👍 Like ({{ review.likes.count }})
+                                </button>
+                            </form>
+                            <form method="post" action="{% url 'dislike_review' review.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn dislike-btn">
+                                    👎 Dislike
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                {% if reviews.count > 5 %}
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="{% url 'view_reviews' product.id %}" class="btn btn-secondary">
+                        View All {{ total_reviews }} Reviews
+                    </a>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="no-reviews">
+                    <p>No reviews yet for this product.</p>
+                    <p>Be the first to share your thoughts!</p>
+                </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Enhanced animations and interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate rating bars when page loads
+            const barFills = document.querySelectorAll('.bar-fill[data-width]');
+            
+            barFills.forEach(function(bar) {
+                const width = bar.getAttribute('data-width');
+                bar.style.setProperty('--target-width', width + '%');
+                
+                // Trigger animation after a small delay
+                setTimeout(function() {
+                    bar.style.width = width + '%';
+                }, 100);
+            });
+
+            // Scroll-triggered animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                        
+                        // Special handling for rating bars
+                        if (entry.target.classList.contains('rating-breakdown')) {
+                            animateRatingBars();
+                        }
+                        
+                        // Counter animation for stats
+                        if (entry.target.classList.contains('stat-card')) {
+                            animateCounter(entry.target);
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            // Observe elements for scroll animations
+            document.querySelectorAll('.rating-breakdown, .reviews-section, .stat-card').forEach(function(el) {
+                observer.observe(el);
+            });
+
+            // Counter animation for statistics
+            function animateCounter(card) {
+                const number = card.querySelector('.stat-number');
+                if (number && !number.classList.contains('counted')) {
+                    number.classList.add('counted');
+                    const target = parseInt(number.textContent) || parseFloat(number.textContent);
+                    let current = 0;
+                    const increment = target / 50;
+                    const timer = setInterval(function() {
+                        current += increment;
+                        if (current >= target) {
+                            number.textContent = target.toString().includes('.') ? target.toFixed(1) : target;
+                            clearInterval(timer);
+                        } else {
+                            number.textContent = target.toString().includes('.') ? current.toFixed(1) : Math.floor(current);
+                        }
+                    }, 30);
+                }
+            }
+
+            // Enhanced rating bar animation
+            function animateRatingBars() {
+                const bars = document.querySelectorAll('.bar-fill');
+                bars.forEach(function(bar, index) {
+                    setTimeout(function() {
+                        const width = bar.getAttribute('data-width');
+                        bar.style.width = width + '%';
+                        
+                        // Add pulse effect
+                        bar.style.animation = 'pulse 0.6s ease';
+                    }, index * 200);
+                });
+            }
+
+            // Add parallax effect to product image
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const parallax = document.querySelector('.product-image img');
+                if (parallax) {
+                    const speed = scrolled * 0.1;
+                    parallax.style.transform = `translateY(${speed}px) scale(1.02)`;
+                }
+            });
+
+            // Add hover effects to review cards
+            document.querySelectorAll('.review-card').forEach(function(card) {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px) scale(1.02)';
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+
+            // Add click ripple effect to buttons
+            document.querySelectorAll('.btn, .action-btn').forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(function() {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+
+            // Add loading animation completion
+            setTimeout(function() {
+                document.body.classList.add('loaded');
+            }, 2000);
+        });
+
+        // Add CSS for ripple effect
+        const style = document.createElement('style');
+        style.textContent = `
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.6);
+                transform: scale(0);
+                animation: rippleAnimation 0.6s linear;
+                pointer-events: none;
+            }
+            
+            @keyframes rippleAnimation {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+            
+            .animate-in {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+            
+            .loaded .product-image {
+                animation: float 3s ease-in-out infinite;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
